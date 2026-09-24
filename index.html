@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vigil // Mobile App Security &amp; Cloud Threat Detection Simulator</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ============ ICON SPRITE ============ -->
+<svg style="display:none">
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5.2 3.4 9.9 8 11 4.6-1.1 8-5.8 8-11V5l-8-3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><line x1="10" y1="18.3" x2="14" y2="18.3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A5.5 5.5 0 0 1 17.2 8.1 4 4 0 0 1 17 18H7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><line x1="12" y1="10" x2="12" y2="14.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="17.3" r="0.9" fill="currentColor"/></symbol>
+  <symbol id="i-logs" viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><line x1="4" y1="12" x2="20" y2="12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><line x1="4" y1="18" x2="14" y2="18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 2h6M10 2v6.2L4.7 18a2 2 0 0 0 1.8 3h11a2 2 0 0 0 1.8-3L14 8.2V2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><line x1="7.5" y1="14" x2="16.5" y2="14" stroke="currentColor" stroke-width="1.7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 8.5a16 16 0 0 1 20 0M5.3 12.3a11 11 0 0 1 13.4 0M8.7 16a6 6 0 0 1 6.6 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="19.2" r="1.1" fill="currentColor"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 10.5V7.3a4 4 0 0 1 8 0v3.2" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V5a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 5v2m-9 0 1 13.2A1.8 1.8 0 0 0 8.8 22h6.4a1.8 1.8 0 0 0 1.8-1.8L18 7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.7"/><line x1="15.3" y1="15.3" x2="21" y2="21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11A8 8 0 1 0 18.6 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M20 5v6h-6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="6.5" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="3.5" y="13.5" width="17" height="6.5" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="7" cy="7.25" r="0.9" fill="currentColor"/><circle cx="7" cy="16.75" r="0.9" fill="currentColor"/></symbol>
+</svg>
+
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24"><use href="#i-shield"/></svg>
+      <div class="brand-text">
+        <span class="brand-name">VIGIL</span>
+        <span class="brand-sub">threat simulation lab</span>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <button class="nav-btn active" data-view="dashboard"><svg><use href="#i-shield"/></svg><span>Dashboard</span></button>
+      <button class="nav-btn" data-view="mobile"><svg><use href="#i-phone"/></svg><span>Mobile Security</span></button>
+      <button class="nav-btn" data-view="cloud"><svg><use href="#i-cloud"/></svg><span>Cloud Threats</span></button>
+      <button class="nav-btn" data-view="alerts"><svg><use href="#i-alert"/></svg><span>Alerts</span><span class="nav-badge" id="navAlertBadge">0</span></button>
+      <button class="nav-btn" data-view="logs"><svg><use href="#i-logs"/></svg><span>Activity Logs</span></button>
+      <button class="nav-btn" data-view="simulator"><svg><use href="#i-flask"/></svg><span>Threat Simulator</span></button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="status-dot"></div>
+      <span>Local session &middot; no data leaves this browser</span>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <header class="topbar">
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <h1 id="pageTitle">Dashboard</h1>
+      <div class="topbar-right">
+        <label class="live-toggle"><input type="checkbox" id="liveToggle"/><span class="live-dot"></span><span class="live-label">Live monitoring</span></label>
+        <span class="clock" id="clock">--:--:--</span>
+      </div>
+    </header>
+
+    <div class="views">
+
+      <!-- ============ DASHBOARD ============ -->
+      <section class="view active" id="view-dashboard">
+
+        <div class="score-row">
+          <div class="panel score-panel">
+            <svg class="ring" viewBox="0 0 140 140">
+              <circle class="ring-track" cx="70" cy="70" r="60"/>
+              <circle class="ring-fill" id="scoreRing" cx="70" cy="70" r="60"/>
+            </svg>
+            <div class="score-center">
+              <span class="score-num" id="scoreNum">100</span>
+              <span class="score-label">SECURITY SCORE</span>
+            </div>
+            <p class="score-verdict" id="scoreVerdict">System nominal</p>
+          </div>
+
+          <div class="stat-grid">
+            <div class="panel stat-card safe">
+              <svg><use href="#i-check"/></svg>
+              <div><span class="stat-num" id="statSafe">0</span><span class="stat-label">Safe Events</span></div>
+            </div>
+            <div class="panel stat-card warning">
+              <svg><use href="#i-alert"/></svg>
+              <div><span class="stat-num" id="statWarning">0</span><span class="stat-label">Warnings</span></div>
+            </div>
+            <div class="panel stat-card threat">
+              <svg><use href="#i-x"/></svg>
+              <div><span class="stat-num" id="statThreat">0</span><span class="stat-label">Threats</span></div>
+            </div>
+            <div class="panel stat-card neutral">
+              <svg><use href="#i-shield"/></svg>
+              <div><span class="stat-num" id="statAlerts">0</span><span class="stat-label">Active Alerts</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Events, last hour</h2>
+            <div class="legend"><span class="safe">Safe</span><span class="warning">Warning</span><span class="threat">Threat</span></div>
+          </div>
+          <svg class="trend" id="trendChart" viewBox="0 0 600 142" role="img" aria-label="Events per 5 minutes over the last hour"></svg>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Recent Activity</h2>
+            <button class="btn ghost" data-goto="logs">View all logs</button>
+          </div>
+          <div class="table-wrap">
+            <table class="log-table" id="recentActivityTable">
+              <thead><tr><th>Time</th><th>Source</th><th>Event</th><th>Risk</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p class="empty-msg" id="recentEmpty" hidden>No activity yet — head to the Threat Simulator to generate events.</p>
+        </div>
+      </section>
+
+      <!-- ============ MOBILE SECURITY ============ -->
+      <section class="view" id="view-mobile">
+
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head"><h2><svg class="ih"><use href="#i-lock"/></svg>Password Strength Check</h2></div>
+            <p class="hint">Type a sample password to simulate a strength audit on a user account.</p>
+            <input type="text" id="pwInput" class="text-input" placeholder="Enter a test password&hellip;" autocomplete="off"/>
+            <div class="meter"><div class="meter-fill" id="pwMeterFill"></div></div>
+            <div class="meter-row">
+              <span id="pwVerdict">&mdash;</span>
+              <button class="btn primary" id="pwAudit">Log Audit Result</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h2><svg class="ih"><use href="#i-phone"/></svg>Failed Login Attempts</h2></div>
+            <p class="hint">Simulate repeated failed unlocks / logins on this device.</p>
+            <div class="counter-row">
+              <span class="counter-num" id="failedLoginCounter">0</span>
+              <span class="hint">consecutive failed attempts</span>
+            </div>
+            <div class="btn-row">
+              <button class="btn danger" id="failLoginBtn">Simulate Failed Login</button>
+              <button class="btn ghost" id="resetLoginBtn"><svg><use href="#i-refresh"/></svg>Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2><svg class="ih"><use href="#i-shield"/></svg>App Permission Audit</h2>
+            <button class="btn primary" id="scanPermsBtn">Scan Installed Apps</button>
+          </div>
+          <div class="table-wrap">
+            <table class="log-table" id="appPermTable">
+              <thead><tr><th>App</th><th>Camera</th><th>Location</th><th>Contacts</th><th>SMS</th><th>Microphone</th><th>Risk</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head"><h2>Unknown App Detection</h2></div>
+            <p class="hint">Scan the device for apps installed outside the official store.</p>
+            <button class="btn danger" id="scanUnknownBtn">Scan for Unknown Apps</button>
+            <p class="result-line" id="unknownResult"></p>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h2><svg class="ih"><use href="#i-wifi"/></svg>Network Connection</h2></div>
+            <p class="hint">Toggle the device's current network to see the risk impact.</p>
+            <label class="switch-row">
+              <span>Connected to public Wi-Fi</span>
+              <input type="checkbox" id="wifiToggle"/>
+              <span class="switch"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Device Security Checklist</h2>
+            <button class="btn primary" id="runDeviceCheckBtn">Run Device Check</button>
+          </div>
+          <div class="checklist" id="deviceChecklist"></div>
+        </div>
+      </section>
+
+      <!-- ============ CLOUD THREAT DETECTION ============ -->
+      <section class="view" id="view-cloud">
+        <div class="panel">
+          <div class="panel-head"><h2><svg class="ih"><use href="#i-server"/></svg>Cloud Account Activity Simulator</h2></div>
+          <p class="hint">Each button simulates a real-world cloud login/access pattern. Vigil classifies it instantly.</p>
+          <div class="sim-grid">
+            <button class="sim-btn safe" data-cloud="normal"><svg><use href="#i-check"/></svg><span>Normal Login</span><small>Trusted device, known IP</small></button>
+            <button class="sim-btn warning" data-cloud="failed"><svg><use href="#i-alert"/></svg><span>Failed Login</span><small>Wrong password entered</small></button>
+            <button class="sim-btn threat" data-cloud="bruteforce"><svg><use href="#i-x"/></svg><span>Brute-Force Attempt</span><small>Rapid repeated failures</small></button>
+            <button class="sim-btn warning" data-cloud="unknown-device"><svg><use href="#i-alert"/></svg><span>Unknown Device Login</span><small>Never-seen fingerprint</small></button>
+            <button class="sim-btn threat" data-cloud="suspicious-ip"><svg><use href="#i-x"/></svg><span>Suspicious IP</span><small>Blocklisted / anomalous region</small></button>
+            <button class="sim-btn threat" data-cloud="excessive-requests"><svg><use href="#i-x"/></svg><span>Excessive Requests</span><small>Possible DDoS / scraping</small></button>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head"><h2>Failed Login Streak</h2></div>
+            <div class="counter-row"><span class="counter-num" id="cloudFailCounter">0</span><span class="hint">since last success or reset</span></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>Requests / min (simulated)</h2></div>
+            <div class="counter-row"><span class="counter-num" id="cloudReqCounter">0</span><span class="hint">threshold: 100 req/min</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ALERTS ============ -->
+      <section class="view" id="view-alerts">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Security Alerts</h2>
+            <div class="btn-row"><button class="btn ghost" id="resolveAllBtn"><svg><use href="#i-check"/></svg>Resolve all</button><label class="show-resolved"><input type="checkbox" id="showResolvedToggle"/> Show resolved</label></div>
+          </div>
+          <div class="alert-list" id="alertList"></div>
+          <p class="empty-msg" id="alertsEmpty" hidden>No active alerts. Run the Threat Simulator to generate some.</p>
+        </div>
+      </section>
+
+      <!-- ============ LOGS ============ -->
+      <section class="view" id="view-logs">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Activity Logs</h2>
+            <div class="btn-row"><button class="btn ghost" id="exportLogsBtn">Export CSV</button><button class="btn ghost danger-text" id="clearLogsBtn"><svg><use href="#i-trash"/></svg>Clear All</button></div>
+          </div>
+
+          <div class="log-filters">
+            <div class="search-box">
+              <svg><use href="#i-search"/></svg>
+              <input type="text" id="logSearch" placeholder="Search events, IPs, locations&hellip;"/>
+            </div>
+            <select id="filterSource" class="select-input">
+              <option value="all">All sources</option>
+              <option value="mobile">Mobile</option>
+              <option value="cloud">Cloud</option>
+            </select>
+            <select id="filterRisk" class="select-input">
+              <option value="all">All risk levels</option>
+              <option value="safe">Safe</option>
+              <option value="warning">Warning</option>
+              <option value="threat">Threat</option>
+            </select>
+          </div>
+
+          <div class="table-wrap">
+            <table class="log-table" id="fullLogTable">
+              <thead><tr><th>Time</th><th>Source</th><th>Event</th><th>Description</th><th>Origin</th><th>Risk</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <p class="empty-msg" id="logsEmpty" hidden>No matching events.</p>
+        </div>
+      </section>
+
+      <!-- ============ SIMULATOR ============ -->
+      <section class="view" id="view-simulator">
+        <div class="panel">
+          <div class="panel-head"><h2><svg class="ih"><use href="#i-phone"/></svg>Mobile Events</h2></div>
+          <div class="sim-grid">
+            <button class="sim-btn safe" data-mobile="strong-pw"><svg><use href="#i-check"/></svg><span>Strong Password Set</span><small>User adopts a strong password</small></button>
+            <button class="sim-btn warning" data-mobile="weak-pw"><svg><use href="#i-alert"/></svg><span>Weak Password Set</span><small>Easily guessable password</small></button>
+            <button class="sim-btn warning" data-mobile="failed-login"><svg><use href="#i-alert"/></svg><span>Failed Unlock</span><small>Wrong PIN / biometric fail</small></button>
+            <button class="sim-btn threat" data-mobile="unknown-app"><svg><use href="#i-x"/></svg><span>Unknown App Installed</span><small>Sideloaded APK detected</small></button>
+            <button class="sim-btn warning" data-mobile="public-wifi"><svg><use href="#i-alert"/></svg><span>Joined Public Wi-Fi</span><small>Unencrypted hotspot</small></button>
+            <button class="sim-btn threat" data-mobile="risky-permission"><svg><use href="#i-x"/></svg><span>Risky Permission Grant</span><small>App requests excessive access</small></button>
+            <button class="sim-btn threat" data-mobile="device-unsecured"><svg><use href="#i-x"/></svg><span>Device Left Unsecured</span><small>Lock screen / encryption disabled</small></button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2><svg class="ih"><use href="#i-cloud"/></svg>Cloud Events</h2></div>
+          <div class="sim-grid">
+            <button class="sim-btn safe" data-cloud="normal"><svg><use href="#i-check"/></svg><span>Normal Login</span><small>Trusted device, known IP</small></button>
+            <button class="sim-btn warning" data-cloud="failed"><svg><use href="#i-alert"/></svg><span>Failed Login</span><small>Wrong password entered</small></button>
+            <button class="sim-btn threat" data-cloud="bruteforce"><svg><use href="#i-x"/></svg><span>Brute-Force Attempt</span><small>Rapid repeated failures</small></button>
+            <button class="sim-btn warning" data-cloud="unknown-device"><svg><use href="#i-alert"/></svg><span>Unknown Device Login</span><small>Never-seen fingerprint</small></button>
+            <button class="sim-btn threat" data-cloud="suspicious-ip"><svg><use href="#i-x"/></svg><span>Suspicious IP</span><small>Blocklisted / anomalous region</small></button>
+            <button class="sim-btn threat" data-cloud="excessive-requests"><svg><use href="#i-x"/></svg><span>Excessive Requests</span><small>Possible DDoS / scraping</small></button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h2>Reset Simulation</h2></div>
+          <p class="hint">Wipe all generated events, alerts and counters and start fresh.</p>
+          <button class="btn ghost danger-text" id="resetAllBtn"><svg><use href="#i-trash"/></svg>Factory Reset Simulation</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
